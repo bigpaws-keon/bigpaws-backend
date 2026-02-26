@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: bigpaws-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bigpaws
+    driver-class-name: org.postgresql.Driver
+    username: keonjo
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
