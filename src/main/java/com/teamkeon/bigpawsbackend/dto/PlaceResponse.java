@@ -9,6 +9,11 @@ public class PlaceResponse {
     private Long id;
     private String name;
     private String description;
+    private String category;
+    private String region;
+    private String district;
+    private String neighborhood;
+    private String mapUrl;
     private double avgKindnessScore;
     private double avgSizeScore;
     private double avgBigDogScore;

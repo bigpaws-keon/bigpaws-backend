@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 public class PlaceCreateRequest {
     private String name;
     private String description;
+    private String category;
+    private String region;
+    private String district;
+    private String neighborhood;
+    private String mapUrl;
 }

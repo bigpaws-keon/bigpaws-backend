@@ -1,5 +1,6 @@
 package com.teamkeon.bigpawsbackend.service;
 
+import com.teamkeon.bigpawsbackend.domain.Category;
 import com.teamkeon.bigpawsbackend.domain.Place;
 import com.teamkeon.bigpawsbackend.domain.Review;
 import com.teamkeon.bigpawsbackend.dto.PlaceCreateRequest;
@@ -33,6 +34,11 @@ public class PlaceService {
         Place place = Place.builder()
                 .name(request.getName())
                 .description(request.getDescription())
+                .category(Category.valueOf(request.getCategory()))
+                .region(request.getRegion())
+                .district(request.getDistrict())
+                .neighborhood(request.getNeighborhood())
+                .mapUrl(request.getMapUrl())
                 .build();
 
         return toResponse(placeRepository.save(place));
@@ -49,6 +55,11 @@ public class PlaceService {
                 .id(place.getId())
                 .name(place.getName())
                 .description(place.getDescription())
+                .category(place.getCategory().name())
+                .region(place.getRegion())
+                .district(place.getDistrict())
+                .neighborhood(place.getNeighborhood())
+                .mapUrl(place.getMapUrl())
                 .avgKindnessScore(Math.round(avgKindness * 10) / 10.0)
                 .avgSizeScore(Math.round(avgSize * 10) / 10.0)
                 .avgBigDogScore(Math.round(avgBigDog * 10) / 10.0)

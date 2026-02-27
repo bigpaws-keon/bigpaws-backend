@@ -34,4 +34,9 @@ public class Review {
 
     @Column(nullable = false)
     private int bigDogScore;        // 대형견 수용도 1~5
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 }
