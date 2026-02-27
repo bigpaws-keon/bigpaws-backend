@@ -1,7 +1,7 @@
 package com.teamkeon.bigpawsbackend.controller;
 
-import com.teamkeon.bigpawsbackend.domain.Place;
 import com.teamkeon.bigpawsbackend.dto.PlaceCreateRequest;
+import com.teamkeon.bigpawsbackend.dto.PlaceResponse;
 import com.teamkeon.bigpawsbackend.service.PlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +16,17 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping
-    public List<Place> getPlaces() {
+    public List<PlaceResponse> getPlaces() {
         return placeService.getAllPlaces();
     }
 
     @GetMapping("/{id}")
-    public Place getPlace(@PathVariable Long id) {
+    public PlaceResponse getPlace(@PathVariable Long id) {
         return placeService.getPlace(id);
     }
 
     @PostMapping
-    public Place createPlace(@RequestBody PlaceCreateRequest request) {
+    public PlaceResponse createPlace(@RequestBody PlaceCreateRequest request) {
         return placeService.createPlace(request);
     }
 }
