@@ -10,6 +10,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 25MB
+
+upload:
+  path: ./uploads
 
 jwt:
   secret: YmlncGF3cy1zZWNyZXQta2V5LWZvci1qd3QtdG9rZW4tMjAyNg==

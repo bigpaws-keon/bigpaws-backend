@@ -3,6 +3,8 @@ package com.teamkeon.bigpawsbackend.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class ReviewResponse {
@@ -12,4 +14,5 @@ public class ReviewResponse {
     private int sizeScore;
     private int bigDogScore;
     private String nickname;
+    private List<String> imageUrls;
 }

@@ -4,7 +4,9 @@ import com.teamkeon.bigpawsbackend.dto.ReviewCreateRequest;
 import com.teamkeon.bigpawsbackend.dto.ReviewResponse;
 import com.teamkeon.bigpawsbackend.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,8 +21,11 @@ public class ReviewController {
         return reviewService.getReviewsByPlace(placeId);
     }
 
-    @PostMapping
-    public ReviewResponse createReview(@PathVariable Long placeId, @RequestBody ReviewCreateRequest request) {
-        return reviewService.createReview(placeId, request);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ReviewResponse createReview(
+            @PathVariable Long placeId,
+            @RequestPart("review") ReviewCreateRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        return reviewService.createReview(placeId, request, images);
     }
 }
