@@ -1,5 +1,6 @@
 package com.teamkeon.bigpawsbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
+    @JsonIgnore
     private Place place;
 
     @Column(nullable = false)
