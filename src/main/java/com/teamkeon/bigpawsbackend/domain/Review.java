@@ -39,4 +39,11 @@ public class Review {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
+    public void update(String content, int kindnessScore, int sizeScore, int bigDogScore) {
+        this.content = content;
+        this.kindnessScore = kindnessScore;
+        this.sizeScore = sizeScore;
+        this.bigDogScore = bigDogScore;
+    }
 }

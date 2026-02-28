@@ -64,6 +64,28 @@ public class ReviewService {
         return toResponse(saved);
     }
 
+    public ReviewResponse updateReview(Long reviewId, ReviewCreateRequest request) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!review.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("본인의 리뷰만 수정할 수 있습니다.");
+        }
+        review.update(request.getContent(), request.getKindnessScore(), request.getSizeScore(), request.getBigDogScore());
+        return toResponse(reviewRepository.save(review));
+    }
+
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다."));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!review.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("본인의 리뷰만 삭제할 수 있습니다.");
+        }
+        reviewImageRepository.deleteAll(reviewImageRepository.findByReviewId(reviewId));
+        reviewRepository.delete(review);
+    }
+
     private void saveImages(Review review, List<MultipartFile> images) {
         try {
             Path dir = Paths.get(uploadPath, "reviews", review.getId().toString()).toAbsolutePath();

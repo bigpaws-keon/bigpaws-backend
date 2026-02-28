@@ -28,4 +28,17 @@ public class ReviewController {
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         return reviewService.createReview(placeId, request, images);
     }
+
+    @PutMapping("/{reviewId}")
+    public ReviewResponse updateReview(
+            @PathVariable Long placeId,
+            @PathVariable Long reviewId,
+            @RequestBody ReviewCreateRequest request) {
+        return reviewService.updateReview(reviewId, request);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public void deleteReview(@PathVariable Long placeId, @PathVariable Long reviewId) {
+        reviewService.deleteReview(reviewId);
+    }
 }
