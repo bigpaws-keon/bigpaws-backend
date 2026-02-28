@@ -15,8 +15,13 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping
-    public List<PlaceResponse> getPlaces() {
-        return placeService.getAllPlaces();
+    public List<PlaceResponse> getPlaces(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false, defaultValue = "latest") String sort
+    ) {
+        return placeService.searchPlaces(keyword, category, region, sort);
     }
 
     @GetMapping("/{id}")

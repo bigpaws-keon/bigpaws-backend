@@ -10,6 +10,7 @@ import com.teamkeon.bigpawsbackend.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -17,6 +18,22 @@ import java.util.List;
 public class PlaceService {
     private final PlaceRepository placeRepository;
     private final ReviewRepository reviewRepository;
+
+    public List<PlaceResponse> searchPlaces(String keyword, String category, String region, String sort) {
+        Category cat = null;
+        if (category != null && !category.isEmpty()) {
+            cat = Category.valueOf(category);
+        }
+
+        String kw = (keyword != null && !keyword.isEmpty()) ? keyword : null;
+        String rg = (region != null && !region.isEmpty()) ? region : null;
+
+        List<PlaceResponse> results = placeRepository.searchPlaces(kw, cat, rg).stream()
+                .map(this::toResponse)
+                .toList();
+
+        return sortPlaces(results, sort);
+    }
 
     public List<PlaceResponse> getAllPlaces() {
         return placeRepository.findAll().stream()
@@ -44,12 +61,33 @@ public class PlaceService {
         return toResponse(placeRepository.save(place));
     }
 
+    private List<PlaceResponse> sortPlaces(List<PlaceResponse> places, String sort) {
+        if (sort == null) sort = "latest";
+
+        return switch (sort) {
+            case "rating" -> places.stream()
+                    .sorted(Comparator.comparingDouble(PlaceResponse::getOverallScore).reversed())
+                    .toList();
+            case "reviews" -> places.stream()
+                    .sorted(Comparator.comparingInt(PlaceResponse::getReviewCount).reversed())
+                    .toList();
+            default -> places.stream()
+                    .sorted(Comparator.comparingLong(PlaceResponse::getId).reversed())
+                    .toList();
+        };
+    }
+
     private PlaceResponse toResponse(Place place) {
         List<Review> reviews = reviewRepository.findByPlaceId(place.getId());
 
         double avgKindness = reviews.stream().mapToInt(Review::getKindnessScore).average().orElse(0);
         double avgSize = reviews.stream().mapToInt(Review::getSizeScore).average().orElse(0);
         double avgBigDog = reviews.stream().mapToInt(Review::getBigDogScore).average().orElse(0);
+
+        double kindnessRounded = Math.round(avgKindness * 10) / 10.0;
+        double sizeRounded = Math.round(avgSize * 10) / 10.0;
+        double bigDogRounded = Math.round(avgBigDog * 10) / 10.0;
+        double overallScore = Math.round((kindnessRounded + sizeRounded + bigDogRounded) / 3.0 * 10) / 10.0;
 
         return PlaceResponse.builder()
                 .id(place.getId())
@@ -60,9 +98,10 @@ public class PlaceService {
                 .district(place.getDistrict())
                 .neighborhood(place.getNeighborhood())
                 .mapUrl(place.getMapUrl())
-                .avgKindnessScore(Math.round(avgKindness * 10) / 10.0)
-                .avgSizeScore(Math.round(avgSize * 10) / 10.0)
-                .avgBigDogScore(Math.round(avgBigDog * 10) / 10.0)
+                .avgKindnessScore(kindnessRounded)
+                .avgSizeScore(sizeRounded)
+                .avgBigDogScore(bigDogRounded)
+                .overallScore(overallScore)
                 .reviewCount(reviews.size())
                 .build();
     }

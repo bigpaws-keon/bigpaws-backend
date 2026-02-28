@@ -17,5 +17,6 @@ public class PlaceResponse {
     private double avgKindnessScore;
     private double avgSizeScore;
     private double avgBigDogScore;
+    private double overallScore;
     private int reviewCount;
 }
