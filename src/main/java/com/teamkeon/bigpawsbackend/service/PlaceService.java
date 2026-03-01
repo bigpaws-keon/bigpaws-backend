@@ -20,15 +20,14 @@ public class PlaceService {
     private final ReviewRepository reviewRepository;
 
     public List<PlaceResponse> searchPlaces(String keyword, String category, String region, String sort) {
-        Category cat = null;
-        if (category != null && !category.isEmpty()) {
-            cat = Category.valueOf(category);
-        }
-
         String kw = (keyword != null && !keyword.isEmpty()) ? keyword : null;
+        String cat = (category != null && !category.isEmpty()) ? category : null;
         String rg = (region != null && !region.isEmpty()) ? region : null;
 
-        List<PlaceResponse> results = placeRepository.searchPlaces(kw, cat, rg).stream()
+        boolean noFilter = (kw == null && cat == null && rg == null);
+        List<Place> places = noFilter ? placeRepository.findAll() : placeRepository.searchPlaces(kw, cat, rg);
+
+        List<PlaceResponse> results = places.stream()
                 .map(this::toResponse)
                 .toList();
 
